@@ -10,15 +10,15 @@ import (
 
 // NewLoggerSupport creates a new instance of the LoggerSupport struct.
 type LoggerSupport struct {
-	logger         *slog.Logger // Logger instance
-	requestEnabled bool         // Enable request logging
+	Logger         *slog.Logger // Logger instance
+	RequestEnabled bool         // Enable request logging
 }
 
 type envelope map[string]any
 
 // Rejects the request with HTTP status code 404 Not Found and a JSON response body.
 func (app *LoggerSupport) NotFound(w http.ResponseWriter, r *http.Request) {
-	if app.requestEnabled {
+	if app.RequestEnabled {
 		app.logError(r, errors.New("not found"))
 	}
 	app.rejectRequest(w, r, http.StatusNotFound)
@@ -26,7 +26,7 @@ func (app *LoggerSupport) NotFound(w http.ResponseWriter, r *http.Request) {
 
 // Rejects the request with HTTP status code 400 Bad Request and a JSON response body.
 func (app *LoggerSupport) BadRequest(w http.ResponseWriter, r *http.Request) {
-	if app.requestEnabled {
+	if app.RequestEnabled {
 		app.logError(r, errors.New("bad request"))
 	}
 	app.rejectRequest(w, r, http.StatusBadRequest)
@@ -34,7 +34,7 @@ func (app *LoggerSupport) BadRequest(w http.ResponseWriter, r *http.Request) {
 
 // Rejects the request with HTTP status code 500 Internal Server Error and a JSON response body.
 func (app *LoggerSupport) InternalServerError(w http.ResponseWriter, r *http.Request) {
-	if app.requestEnabled {
+	if app.RequestEnabled {
 		app.logError(r, errors.New("internal server error"))
 	}
 	app.rejectRequest(w, r, http.StatusInternalServerError)
@@ -42,7 +42,7 @@ func (app *LoggerSupport) InternalServerError(w http.ResponseWriter, r *http.Req
 
 // Rejects the request with HTTP status code 401 Unauthorized and a JSON response body.
 func (app *LoggerSupport) Unauthorized(w http.ResponseWriter, r *http.Request) {
-	if app.requestEnabled {
+	if app.RequestEnabled {
 		app.logError(r, errors.New("unauthorized"))
 	}
 	app.rejectRequest(w, r, http.StatusUnauthorized)
@@ -50,7 +50,7 @@ func (app *LoggerSupport) Unauthorized(w http.ResponseWriter, r *http.Request) {
 
 // Rejects the request with HTTP status code 403 Forbidden and a JSON response body.
 func (app *LoggerSupport) Forbidden(w http.ResponseWriter, r *http.Request) {
-	if app.requestEnabled {
+	if app.RequestEnabled {
 		app.logError(r, errors.New("forbidden"))
 	}
 	app.rejectRequest(w, r, http.StatusForbidden)
@@ -76,5 +76,5 @@ func (app *LoggerSupport) logError(r *http.Request, err error) {
 	)
 
 	err = fmt.Errorf("reject: %w", err)
-	app.logger.Error(err.Error(), "method", method, "url", url)
+	app.Logger.Error(err.Error(), "method", method, "url", url)
 }
